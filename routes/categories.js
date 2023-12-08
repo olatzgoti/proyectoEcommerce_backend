@@ -14,4 +14,6 @@ router.get('/getById/id/:id', CategoryController.getById)
 
 router.get('/getByName/name/:name', CategoryController.getByName)
 
+router.get('/getAllwithProducts', CategoryController.getAllwithProducts)
+
 module.exports = router
