@@ -11,7 +11,7 @@ const ProductController = {
       .catch((error) => console.error(error))
     },
   
-    async update(req, res) {//SOLO DE NOMBRE LO 1º
+    async update(req, res) {//SOLO DE NOMBRE LO 1º, falta modificar otros campos
       await Product.update(
         {name: req.body.name}, {where: {id: req.params.id}})
         .then(res.status(200).send({message: 'Product updated'}))
@@ -25,7 +25,7 @@ const ProductController = {
       .catch((error) => console.error(error))
     },
   
-    async getAll(req, res) {
+    async getAll(req, res) {//APARECEN SIN LA CATEGORIA, PENDIENTE DE AÑADIR
       await Product.findAll()
       .then(products => res.status(200).send({message: 'Products:', products}))
       .catch((error) => console.error(error))
@@ -36,7 +36,7 @@ const ProductController = {
       .then(product => res.status(200).send({product}))
       .catch((error) => console.error(error))
     },
-    
+
     async getByName(req, res) {
       await Product.findOne({
         where: {name: {[Op.like]: req.params.name}}
