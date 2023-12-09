@@ -1,4 +1,4 @@
-const {Category, Products, Sequelize} = require('../models/index.js')
+const {Category, Product, Sequelize} = require('../models/index.js')
 const {Op} = Sequelize
 
 function catchError(res, error) {
@@ -58,9 +58,8 @@ const CategoryController = {
     })
   },
 
-  // no funcionará hasta tener lista la parte de Products
   async getAllwithProducts(req, res) {
-    await Category.findAll({include: [Products]})
+    await Category.findAll({include: [Product]})
     .then(categories => res.status(200).send(categories))
     .catch(error => {
       catchError(res, error)
