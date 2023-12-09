@@ -22,4 +22,4 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'OrderProduct',
   });
   return OrderProduct;
-};
+};  

@@ -21,7 +21,7 @@ const ProductController = {
       .then(product => res.status(201).send({message: 'Product created', product}))
       .catch((error) => console.error(error))
 }},
-  
+    
     async update(req, res) {//SOLO DE NOMBRE LO 1º, falta modificar otros campos
       await Product.update(
       //  const {name, CategoryId} = 
@@ -69,6 +69,7 @@ const ProductController = {
       .catch((error)=>console.log(error))
     },
 
+    // NO FUNCIONA
     async orderByPrice(req, res){
       
         await Product.findAll({ where: { price: {[options.query.order]: price }}})
