@@ -10,7 +10,6 @@ router.get('/getAll', ProductController.getAll);
 //router.get('/getAll?order=price', ProductController.getAll);
 ///personas?order=-ci
 
-router.get('orderByPrice', ProductController.orderByPrice);
 
 router.get('/getById/id/:id', ProductController.getById);
 
@@ -24,5 +23,6 @@ router.put('/update/id/:id', ProductController.update);
 
 router.delete(('/delete/id/:id'), ProductController.delete);
 
+router.get('/orderByPrice', ProductController.orderByPrice);
 
 module.exports = router;

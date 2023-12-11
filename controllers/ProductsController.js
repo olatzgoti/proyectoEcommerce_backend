@@ -6,10 +6,10 @@ const {Op} = Sequelize;
 
 const ProductController = {
     create(req, res) {
+      console.log(req.body);
       const name = req.body.name;
       const price = req.body.price;
       const category = req.body.CategoryId;
-      console.log(req.body);
     
       if(!name || !price || !category) 
       { 
@@ -23,9 +23,8 @@ const ProductController = {
 }},
     
     async update(req, res) {//SOLO DE NOMBRE LO 1º, falta modificar otros campos
-      await Product.update(
-      //  const {name, CategoryId} = 
-        {name: req.body.name}, {where: {id: req.params.id}})
+      await Product.update(req.body,        
+      {where: {id: req.params.id}})
         .then(res.status(200).send({message: 'Product updated'}))
         .catch((error) => console.error(error))
     },
@@ -69,10 +68,9 @@ const ProductController = {
       .catch((error)=>console.log(error))
     },
 
-    // NO FUNCIONA
     async orderByPrice(req, res){
       
-        await Product.findAll({ where: { price: {[options.query.order]: price }}})
+        await Product.findAll({ order: [['price', 'DESC']]})
         .then(products => res.status(200).send({message: 'Products:', products
       }))
         .catch((error) => console.error(error))
