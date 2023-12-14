@@ -15,7 +15,7 @@ const OrdersController = {
     create(req, res)
     {   console.log(req.body);
         Order.create(req.body)
-        console.log(order)
+        // console.log(order)
         .then(order => res.status(201).send({message: 'Pedido creado', order}, console.log(order)))
         .catch((error)=>console.log(error))
     },
