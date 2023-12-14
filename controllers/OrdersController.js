@@ -1,9 +1,6 @@
 const { Product, User, Order, Sequelize } = require('../models/index.js');
 const {Op} = Sequelize;
 
-
-
-
 function catchError(res, error) {
     // maneja el posible error en la petición a la DB
     console.error(error)
@@ -15,7 +12,6 @@ const OrdersController = {
     create(req, res)
     {   console.log(req.body);
         Order.create(req.body)
-        // console.log(order)
         .then(order => res.status(201).send({message: 'Pedido creado', order}, console.log(order)))
         .catch((error)=>console.log(error))
     },
@@ -27,6 +23,5 @@ const OrdersController = {
         .catch((error)=>console.log(error))
     }
 }
-
 
 module.exports = OrdersController;

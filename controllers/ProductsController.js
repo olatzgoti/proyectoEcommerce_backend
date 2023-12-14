@@ -22,7 +22,7 @@ const ProductController = {
       .catch((error) => console.error(error))
 }},
     
-    async update(req, res) {//SOLO DE NOMBRE LO 1º, falta modificar otros campos
+    async update(req, res) {
       await Product.update(req.body,        
       {where: {id: req.params.id}})
         .then(res.status(200).send({message: 'Product updated'}))
