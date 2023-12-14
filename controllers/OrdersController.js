@@ -10,8 +10,9 @@ function catchError(res, error) {
 const OrdersController = {
 
     create(req, res)
-    {   console.log(req.body);
-        Order.create(req.body)
+    {   
+        console.log(req.body);
+        Order.create({...req.body, UserId: req.user.id})
         .then(order => res.status(201).send({message: 'Pedido creado', order}, console.log(order)))
         .catch((error)=>console.log(error))
     },
