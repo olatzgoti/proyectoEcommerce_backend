@@ -1,4 +1,5 @@
-const {User, Token} = require ('../models/index')
+const {User, Token, Sequelize} = require ('../models/index')
+const {Op} = Sequelize
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {jwt_secret} = require('../config/config.json')['development']
@@ -8,7 +9,7 @@ const UserController = {
     if(!req.body.name || !req.body.last_name || !req.body.email || !req.body.password) {
       return res.status(400).send({message: 'All fields are required'})
     }
-    
+
     req.body.role = 'user'
     const password = bcrypt.hashSync(req.body.password, 10)
     User.create({...req.body, password: password})
@@ -30,6 +31,22 @@ const UserController = {
       Token.create({token, UserId: user.id})
       res.send({message: 'Hola ' + user.name, user, token})
     })
+  },
+
+  async logout(req, res) {
+    try {
+      await Token.destroy({
+        where: {
+          [Op.and]: [
+            {UserId: req.user.id},
+            {token: req.headers.authorization}
+          ]
+        }
+      })
+      res.status(200).send({message: 'Logout'})
+    } catch {
+      error => res.status(400).send({message: 'Logout error'})
+    }
   },
 
   // sólo podrán ver los datos de un usuario conectado si se tiene permisos de administrador (se usa el middleware isAdmin)
