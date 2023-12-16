@@ -10,8 +10,6 @@ function catchError(res, error) {
 const OrdersController = {
     create(req, res)
     {   
-        console.log(req.body);
-console.log(req.body.UserId)
         const ord=req.body
         Order.create({...req.body, UserId: req.body.UserId}) 
         .then((order) => res.status(201).send({message: 'Pedido creado', order }))
@@ -22,9 +20,6 @@ console.log(req.body.UserId)
         await Order.findAll({include: [{model: Product, through: 'OrderProduct'}]})
         .then((orders) => {
           res.status(200).send({message: 'Pedidos y productos', orders})
-
-        await Order.findAll({ include: [Product]})
-        .then((order) => res.status(200).send(order))
         .catch((error)=>console.log(error))
     }
 }
