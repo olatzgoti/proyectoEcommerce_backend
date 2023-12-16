@@ -26,19 +26,29 @@ const ProductController = {
     }},
     
     async update(req, res) {
-      await Product.update(req.body,        
-      {where: {id: req.params.id}})
-        .then(res.status(200).send({message: 'Product updated'}))
-        .catch((error) => console.error(error))
+      const checkId = await Product.findByPk(req.params.id)
+      if (checkId){
+        await Product.update(req.body,        
+        {where: {id: req.params.id}})
+          .then(res.status(200).send(
+            {message: 'Product updated'}
+            ))
+          .catch((error) => console.error(error))
+      } else {
+        res.status(500).send({message: 'Incorrect ProductId'})
+      }
     },
-  
 
     async delete(req, res) {
-      await Product.destroy({where: {id: req.params.id}})
-      .then(res.status(200).send({message: 'Product deleted'}))
-      .catch((error) => console.error(error))
+      const checkId = await Product.findByPk(req.params.id)
+      if (checkId){
+        await Product.destroy({where: {id: req.params.id}})
+        .then(res.status(200).send({message: 'Product deleted'}))
+        .catch((error) => console.error(error))
+      } else {
+        res.status(500).send({message: 'Incorrect ProductId'})
+      }
     },
-  
 
     async getAll(req, res) {
       await Product.findAll({include: [Category]})
