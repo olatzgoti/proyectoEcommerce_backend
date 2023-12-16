@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const {typeError} = require('./middlewares/errors.js')
+const {authentication} = require('./middlewares/authentication.js')
 const PORT = 3000;
 
 app.use(express.json())
