@@ -8,7 +8,6 @@ function catchError(res, error) {
   }
 
 const OrdersController = {
-
     create(req, res)
     {   
         console.log(req.body);
@@ -20,6 +19,9 @@ console.log(req.body.UserId)
     },
 
     async getOrders(req,res) {
+        await Order.findAll({include: [{model: Product, through: 'OrderProduct'}]})
+        .then((orders) => {
+          res.status(200).send({message: 'Pedidos y productos', orders})
 
         await Order.findAll({ include: [Product]})
         .then((order) => res.status(200).send(order))

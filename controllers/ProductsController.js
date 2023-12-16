@@ -10,17 +10,20 @@ const ProductController = {
       const name = req.body.name;
       const price = req.body.price;
       const category = req.body.CategoryId;
-    
+
       if(!name || !price || !category) 
       { 
-        res.send('Rellene todos los campos');
+        res.send({message: 'Rellene todos los campos'});
     }
       else
       {
       Product.create(req.body)
-      .then(product => res.status(201).send({message: 'Product created', product}))
+      .then(product => {
+        res.status(201).send({message: 'Product created', product})
+        product.addOrder(req.body.OrderId)
+      })
       .catch((error) => console.error(error))
-}},
+    }},
     
     async update(req, res) {
       await Product.update(req.body,        

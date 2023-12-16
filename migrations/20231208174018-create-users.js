@@ -10,7 +10,6 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       last_name: {
@@ -18,11 +17,9 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       role: {
         type: Sequelize.STRING
