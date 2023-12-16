@@ -1,4 +1,4 @@
-const { Product, User, Order, Sequelize } = require('../models/index.js');
+const { Product, User, Order, OrderProduct, Sequelize } = require('../models/index.js');
 const {Op} = Sequelize;
 
 function catchError(res, error) {
@@ -12,17 +12,21 @@ const OrdersController = {
     create(req, res)
     {   
         console.log(req.body);
-        Order.create({...req.body, UserId: req.user.id})
-        .then(order => res.status(201).send({message: 'Pedido creado', order}, console.log(order)))
+console.log(req.body.UserId)
+        const ord=req.body
+        Order.create({...req.body, UserId: req.body.UserId}) 
+        .then((order) => res.status(201).send({message: 'Pedido creado', order }))
         .catch((error)=>console.log(error))
     },
 
     async getOrders(req,res) {
 
-        await Order.findAll({ include: [Product] })
-        .then(order=>res.status(200).send({message: 'Pedidos y productos', order}))
+        await Order.findAll({ include: [Product]})
+        .then((order) => res.status(200).send(order))
         .catch((error)=>console.log(error))
     }
 }
+
+
 
 module.exports = OrdersController;
