@@ -8,4 +8,5 @@ router.post('/login', UserController.login)
 router.get('/getUser', authentication, isAdmin, UserController.getUser)
 router.delete('/logout', authentication, UserController.logout)
 
+
 module.exports = router
