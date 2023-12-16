@@ -4,17 +4,37 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {jwt_secret} = require('../config/config.json')['development']
 
-const UserController = {
-  create(req, res) {
-    if(!req.body.name || !req.body.last_name || !req.body.email || !req.body.password) {
-      return res.status(400).send({message: 'All fields are required'})
-    }
+async function matchFunction(user, req, res){
+  let isMatch = false
+  if (user){
+    isMatch = await bcrypt.compareSync(req.body.password, user.password)
+  }
+  if(!user || !isMatch) {
+    return res.status(400).send('Incorrect user/password')
+  }
+  const token = await jwt.sign({id: user.id}, jwt_secret)
+  await Token.create({token, UserId: user.id})
+  return res.send({message: 'Hola ' + user.name, user, token})
 
-    req.body.role = 'user'
-    const password = bcrypt.hashSync(req.body.password, 10)
-    User.create({...req.body, password: password})
-      .then(user => res.status(201).send({message: 'User created', user}))
-      .catch(error => console.error(error))
+}
+
+const UserController = {
+  async create(req, res, next) {
+    try {
+      req.body.role = 'user'
+      // controla posible error de falta de password
+      if(req.body.password){
+        const password = bcrypt.hashSync(req.body.password, 10)
+        const user = await User.create({...req.body, password})
+        res.status(201).send({message: 'User created', user})
+      } else {
+        const error = {message: 'Password is required'}
+        throw (error)
+      }
+      
+    } catch (error) {
+      next(error)
+    }
   },
 
   async login(req, res) {
@@ -22,15 +42,25 @@ const UserController = {
       where: {
         email: req.body.email
       }
-    }).then(user => {
-      const isMatch = bcrypt.compareSync(req.body.password, user.password)
-      if(!user || !isMatch) {
-        return res.status(400).send('Incorrect user/password')
-      }
-      const token = jwt.sign({id: user.id}, jwt_secret)
-      Token.create({token, UserId: user.id})
-      res.send({message: 'Hola ' + user.name, user, token})
+    }).then((user) => {
+      Token.findOne({
+        where: {
+          UserId: user.id
+        }
+      }).then(
+        (tokenData) => {
+          if (tokenData != null) {
+            res.status(400).send({message: 'User already logged'})
+          } else {
+            matchFunction(user, req, res)
+          }
+        } 
+      )
     })
+    .catch((error) => {
+      console.error(error)
+      res.status(500).send({message: 'Data error'})
+  })
   },
 
   async logout(req, res) {
@@ -56,7 +86,13 @@ const UserController = {
         email: req.body.email
       }
     })
-    .then(users => res.status(200).send({message: 'Users:', users}))
+    .then(users => {
+      if(users){
+        res.status(200).send({message: 'Users:', users})
+      } else {
+        res.status(500).send({message: 'Incorrect email'})
+      }
+    })
     .catch(error => console.log(error))
   }
 }
