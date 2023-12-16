@@ -1,14 +1,30 @@
-const { Product, Order } = require('../models/index.js');
+const { Product, User, Order } = require('../models/index.js');
 
 const OrdersController = {
-    create(req, res)
+    async create(req, res)
     {   
-        Order.create({...req.body, UserId: req.user.id})
+      const checkUser = await User.findOne({
+        where: {
+          id: req.body.UserId
+        }
+      })
+      
+      const checkProduct = await Product.findOne({
+        where: {
+          id: req.body.ProductId
+        }
+      })
+      
+      if(checkUser && checkProduct){
+        await Order.create({...req.body, UserId: req.user.id})
         .then((order) => {
           res.status(201).send({message: 'Pedido creado', order})
           order.addProduct(req.body.ProductId)
         })
-        .catch((error)=>{res.status(500).send({message: 'Error'})})
+        .catch((error)=>{res.status(500).send({message: 'Error:', error})})
+      } else {
+        res.status(500).send({message: 'Incorrect UserId/ProductId'})
+      }
     },
 
     async getOrders(req,res) {
