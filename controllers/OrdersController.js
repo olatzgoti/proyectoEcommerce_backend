@@ -1,27 +1,23 @@
-const { Product, User, Order, Sequelize } = require('../models/index.js');
-const {Op} = Sequelize;
-
-function catchError(res, error) {
-    // maneja el posible error en la petición a la DB
-    console.error(error)
-    res.status(500).send('Query error')
-  }
+const { Product, Order } = require('../models/index.js');
 
 const OrdersController = {
-
     create(req, res)
     {   
-        console.log(req.body);
         Order.create({...req.body, UserId: req.user.id})
-        .then(order => res.status(201).send({message: 'Pedido creado', order}, console.log(order)))
-        .catch((error)=>console.log(error))
+        .then((order) => {
+          res.status(201).send({message: 'Pedido creado', order})
+          order.addProduct(req.body.ProductId)
+        })
+        .catch((error)=>{res.status(500).send({message: 'Error'})})
     },
 
     async getOrders(req,res) {
+        await Order.findAll({include: [{model: Product, through: 'OrderProduct'}]})
+        .then((orders) => {
+          res.status(200).send({message: 'Pedidos y productos', orders})
 
-        await Order.findAll({ include: [Product] })
-        .then(order=>res.status(200).send({message: 'Pedidos y productos', order}))
-        .catch((error)=>console.log(error))
+        })
+        .catch((error) => console.error(error))
     }
 }
 
