@@ -16,7 +16,7 @@ const OrdersController = {
       })
       
       if(checkUser && checkProduct){
-        await Order.create({...req.body, UserId: req.user.id})
+        await Order.create({...req.body, UserId: req.body.UserId})
         .then((order) => {
           res.status(201).send({message: 'Pedido creado', order})
           order.addProduct(req.body.ProductId)
