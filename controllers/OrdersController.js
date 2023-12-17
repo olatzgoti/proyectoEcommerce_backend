@@ -30,15 +30,8 @@ const OrdersController = {
     async getOrders(req,res) {
         await Order.findAll({include: [{model: Product, through: 'OrderProduct'}]})
         .then((orders) => {
-<<<<<<< HEAD
           res.status(200).send({message: 'Pedidos y productos', orders})})
         .catch((error)=>console.log(error))
-=======
-          res.status(200).send({message: 'Pedidos y productos', orders})
-
-        })
-        .catch((error) => console.error(error))
->>>>>>> 202c4ed5ead724e55ac8587e3d53f8c099831be5
     }
 }
 
