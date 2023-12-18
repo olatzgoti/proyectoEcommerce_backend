@@ -25,7 +25,7 @@ const UserController = {
       // controla posible error de falta de password
       if(req.body.password){
         const password = bcrypt.hashSync(req.body.password, 10)
-        const user = await User.create({...req.body, password})
+        const user = await User.create({...req.body, password, confirmed: false})
         res.status(201).send({message: 'User created', user})
       } else {
         const error = {message: 'Password is required'}
@@ -42,13 +42,14 @@ const UserController = {
       where: {
         email: req.body.email
       }
-    }).then((user) => {
+    })
+    .then((user) => {
       Token.findOne({
         where: {
           UserId: user.id
         }
-      }).then(
-        (tokenData) => {
+      })
+    .then((tokenData) => {
           if (tokenData != null) {
             res.status(400).send({message: 'User already logged'})
           } else {
