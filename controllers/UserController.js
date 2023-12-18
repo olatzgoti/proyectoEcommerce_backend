@@ -3,6 +3,7 @@ const {Op} = Sequelize
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {jwt_secret} = require('../config/config.json')['development']
+const transporter = require('../config/nodemailer')
 
 async function matchFunction(user, req, res){
   let isMatch = false
@@ -25,8 +26,16 @@ const UserController = {
       // controla posible error de falta de password
       if(req.body.password){
         const password = bcrypt.hashSync(req.body.password, 10)
-        const user = await User.create({...req.body, password})
-        res.status(201).send({message: 'User created', user})
+        const user = await User.create({...req.body, password, confirmed: false})
+        const url = 'http://localhost:3000/users/confirm' + req.body.email
+
+        await transporter.sendMail({
+          to: req.body.email,
+          subject: 'Confirma tu registro',
+          html: `<h3>Pulsa en el enlace para confirmar tu registro </h3>
+                <a href = '${url}'>Registro</a>`
+        })
+        res.status(201).send({message: 'Te hemos enviado un email para confirmar tu registro', user})
       } else {
         const error = {message: 'Password is required'}
         throw (error)
@@ -34,6 +43,19 @@ const UserController = {
       
     } catch (error) {
       next(error)
+    }
+  },
+
+  async confirm(req, res) {
+    try {
+      await User.update({confirmed: true}, {
+        where: {
+          email:req.params.email
+        }
+      })
+      res.status(200).send({message: 'Usuario confirmado correctamente'})
+    } catch (error) {
+      console.log(error)
     }
   },
 
@@ -49,6 +71,9 @@ const UserController = {
         }
       }).then(
         (tokenData) => {
+          if(!user.confirmed){
+            return res.status(400).send({message: 'Please confirm your email'})
+          }
           if (tokenData != null) {
             res.status(400).send({message: 'User already logged'})
           } else {
