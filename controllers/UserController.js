@@ -64,7 +64,8 @@ const UserController = {
       where: {
         email: req.body.email
       }
-    }).then((user) => {
+    })
+    .then((user) => {
       Token.findOne({
         where: {
           UserId: user.id
