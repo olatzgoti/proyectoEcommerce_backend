@@ -27,7 +27,9 @@ const UserController = {
       if(req.body.password){
         const password = bcrypt.hashSync(req.body.password, 10)
         const user = await User.create({...req.body, password, confirmed: false})
-        const url = 'http://localhost:3000/users/confirm/' + req.body.email
+        // creamos token para ocultar el email en la url de confirmación
+        const emailToken = jwt.sign({email: req.body.email}, jwt_secret, {expiresIn: '48h'})
+        const url = 'http://localhost:3000/users/confirm/' + emailToken
 
         await transporter.sendMail({
           to: req.body.email,
@@ -37,7 +39,6 @@ const UserController = {
         })
         .then(res.status(201).send({message: 'Te hemos enviado un email para confirmar tu registro', user}))
         .catch(error => console.log(error))
-        // res.status(201).send({message: 'Te hemos enviado un email para confirmar tu registro', user})
       } else {
         const error = {message: 'Password is required'}
         throw (error)
@@ -50,9 +51,11 @@ const UserController = {
 
   async confirm(req, res) {
     try {
+      const token = req.params.emailToken
+      const payload = jwt.verify(token, jwt_secret)
       await User.update({confirmed: true}, {
         where: {
-          email:req.params.email
+          email: payload.email
         }
       })
       res.status(200).send({message: 'Usuario confirmado correctamente'})
