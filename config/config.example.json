@@ -5,7 +5,11 @@
     "database": "database_development",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "jwt_secret": "aquí tu frase secreta"
+    "jwt_secret": "aquí tu frase secreta",
+    "credentials": {
+      "user": "aquí tu email",
+      "pass": "aquí tu password"
+    }
   },
   "test": {
     "username": "root",

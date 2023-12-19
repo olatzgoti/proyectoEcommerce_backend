@@ -27,7 +27,7 @@ const UserController = {
       if(req.body.password){
         const password = bcrypt.hashSync(req.body.password, 10)
         const user = await User.create({...req.body, password, confirmed: false})
-        const url = 'http://localhost:3000/users/confirm' + req.body.email
+        const url = 'http://localhost:3000/users/confirm/' + req.body.email
 
         await transporter.sendMail({
           to: req.body.email,
@@ -35,7 +35,9 @@ const UserController = {
           html: `<h3>Pulsa en el enlace para confirmar tu registro </h3>
                 <a href = '${url}'>Registro</a>`
         })
-        res.status(201).send({message: 'Te hemos enviado un email para confirmar tu registro', user})
+        .then(res.status(201).send({message: 'Te hemos enviado un email para confirmar tu registro', user}))
+        .catch(error => console.log(error))
+        // res.status(201).send({message: 'Te hemos enviado un email para confirmar tu registro', user})
       } else {
         const error = {message: 'Password is required'}
         throw (error)
