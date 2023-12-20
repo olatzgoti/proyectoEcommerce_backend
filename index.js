@@ -14,3 +14,5 @@ app.use('/users', require('./routes/users'))
 app.use(typeError)
 
 app.listen(PORT, () => console.log('Server started at port ' + PORT))
+
+module.exports = app
