@@ -50,9 +50,10 @@ _'localhost:3000/categories/newCategory'_
 
 - Update
 Necesario introducir en la ruta el id que se recupera vía req.params
+_'localhost:3000/categories/updateCategory/id/:id'_
 
 - Delete
-Lo utilizaremos para borrar un registro. Introduciremos id en la ruta y lo recuperamos por req.params
+Lo utilizaremos para borrar un registro. Introduciremos id en la ruta y lo recuperamos por req.params.
 _'localhost:3000/categories/deleteCategory/id/:id'_
 
 - Get
@@ -60,59 +61,72 @@ Utilizamos para ver todas las categories
 _'localhost:3000/categories/getAll'_
 
 - GetById
-Búsqueda de categoría por ID
+Búsqueda de categoría por ID. Introducimos el id de la categoría en la ruta y la recuperamos por req.params.
 _'localhost:3000/categories/getById/id/:id'_
 
 - GetByName
-Busqueda por nombre
+Busqueda por nombre. Introducimos el nombre en la ruta y lo recogemos por req.params.
 _'localhost:3000/categories/getByName/name/:name'_ 
 
 - GetAllWithProducts
-Recuperar categorias junto a sus productos
+Recuperar categorias junto a sus productos. Se hace la solicitud por la ruta, no es necesario meter más datos.
 _'localhost:3000/categories/GetAllWithProducts'_
 
 ## Products
 ​
 - Create
-Lo utilizaremos para añadir un producto: _'localhost:3000/Products/newProduct'_. En el body deben introducirse los datos requeridos (name, price y CategoryId). (post)
+Lo utilizaremos para añadir un producto. En el body deben introducirse los datos requeridos (name, price y CategoryId). Se recogen vía req.body utilizando el método .post.
+_'localhost:3000/Products/newProduct'_. 
 
 - GetAll
-Lo usaremos para recoger todos los productos: _'localhost:3000/Products/getAll'_ (get)
+Lo usaremos para recoger todos los productos, se hace la solicitud desde la propia ruta, no precisa introgucir informacón. Vía método .get.
+_'localhost:3000/Products/getAll'_ 
 
 - GetById
-Buscamos producto por id: _'localhost:3000/getById/id/:id'_ (get)
+Buscamos producto por id introduciendo el id en la ruta y recogiendolo con req.params con el método .get. 
+_'localhost:3000/getById/id/:id'_ 
 
 - GetByName
-Buscamos por nombre: _'localhost:3000/Products/getByName/name/:name'_ (get)
+Buscamos el producto por nombre introduciendolo en la ruta y lo recogemos con req.params. Se envía con el método .get.
+_'localhost:3000/Products/getByName/name/:name'_ 
 
 - GetByPrice
-Búsqueda por precio : _'localhost:3000/Products/GetByPrice/:price'_ (get)
+Búsqueda productos por precio introduciendolo en la ruta, lo recogeremos con req.params, y utilizamos el método .get.
+_'localhost:3000/Products/GetByPrice/:price'_
 
 - GetAll?order
-Ver todos los productos según id descendente: _'localhost:3000/Products/GetAll?order=-id'_ (get)
+Buscamos los productos con todos los productos según id descendente. Se utiliza el método .get.
+_'localhost:3000/Products/GetAll?order=-id'_
 
 - Update
-Actualizar productos: _'localhost:3000/Products/update/id/:id'_ (put)
+Endpoint para actualizar productos uno a uno, introduciremosel id en la ruta y lo recogeremos con req.params. Utilizamos el método .put.
+ _'localhost:3000/Products/update/id/:id'_ 
 
 - Delete
-Borrar registro: _'localhost:3000/Products/delete/id/:id'_ (delete)
+Borrar registro del producto introducido en la ruta, lo recogeremos con req.params y utilizaremos el método .delete.
+_'localhost:3000/Products/delete/id/:id'_
 
 - OrderByPrice
-Ver productos por precio: _'localhost:3000/Products/orderByPrice'_ (get)
+Veremos productos ordenados por precio, no se precisa introducir ningún dato y utilizamos el método .get.
+_'localhost:3000/Products/orderByPrice'_ (get)
 
 ## Users
 
 - Create
-Crear un nuevo usuario :_'localhost:3000/Users/create'_
+Crear un nuevo usuario, introduciremos en el body los campos necesarios para crear el registro. En este caso name, last_name, email y password. Utilizamos el método .post.
+:_'localhost:3000/Users/create'_
 
 - Login
-Iniciar sesión : _'localhost:3000/Users/login'_. Introduciendo por body el email y el password (post)
+Para iniciar sesión será preciso haber confirmado el correo electrónico, de esta manera cambia el campo confirmed a true y nos envía el token que nos da acceso a la página. Introducimos por body el email y el password con el método .post.
+_'localhost:3000/Users/login'_. 
 
--GetUser
-Ver los datos de un usuario, es necesario autentificarse y ser admin: _'localhost:3000/Users/getUser'_ (get)
+- GetUser
+Ver los datos de un usuario, es necesario autentificarse y ser admin. Se recogen con un .get
+_'localhost:3000/Users/getUser'_ 
 
 - Delete
-Salir de la sesión: _'localhost:3000/Users/logout'_ (delete)
+Salir de la sesión, es necesario introdocir en el Header el token que nos han mandado. Utilizamos el método .delete. 
+_'localhost:3000/Users/logout'_ 
 
 ## Orders
 
