@@ -21,7 +21,20 @@ async function matchFunction(user, req, res){
 
 const UserController = {
   async create(req, res, next) {
+    let check
     try {
+        check = await User.findOne({
+          where: {
+            email: req.body.email
+          }
+        })
+
+      if(check != null || check != undefined){
+        const error = {status: 500, message: 'email already used'}
+        throw error
+        // res.send({message: 'email already used'})
+        return
+      }
       req.body.role = 'user'
       // controla posible error de falta de password
       if(req.body.password){
@@ -40,7 +53,7 @@ const UserController = {
         .then(res.status(201).send({message: 'Te hemos enviado un email para confirmar tu registro', user}))
         .catch(error => console.log(error))
       } else {
-        const error = {message: 'Password is required'}
+        const error = {status: 500, message: 'Password is required'}
         throw (error)
       }
       
