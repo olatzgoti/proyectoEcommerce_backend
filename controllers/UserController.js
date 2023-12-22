@@ -43,7 +43,7 @@ const UserController = {
         // creamos token para ocultar el email en la url de confirmación
         const emailToken = jwt.sign({email: req.body.email}, jwt_secret, {expiresIn: '48h'})
         const url = 'http://localhost:3000/users/confirm/' + emailToken
-
+        console.log(url);
         await transporter.sendMail({
           to: req.body.email,
           subject: 'Confirma tu registro',
@@ -54,6 +54,7 @@ const UserController = {
         .catch(error => console.log(error))
       } else {
         const error = {status: 500, message: 'Password is required'}
+        
         throw (error)
       }
       
