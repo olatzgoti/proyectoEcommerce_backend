@@ -1,10 +1,12 @@
 const express = require('express');
+const cors = require('cors')
 const app = express();
 const {typeError} = require('./middlewares/errors.js')
 const {authentication} = require('./middlewares/authentication.js')
 const PORT = 3000;
 
 app.use(express.json())
+app.use(cors())
 
 app.use('/categories', require('./routes/categories'))
 app.use('/products', require('./routes/products'))
