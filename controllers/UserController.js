@@ -128,7 +128,7 @@ const UserController = {
   async getUser(req, res) {
     await User.findOne({
       where: {
-        email: req.body.email
+        email: req.params.email
       }
     })
     .then(users => {

@@ -32,7 +32,17 @@ const OrdersController = {
         .then((orders) => {
           res.status(200).send({message: 'Pedidos y productos', orders})})
         .catch((error)=>console.log(error))
-    }
+    },
+
+    async getOrdersById(req,res) {
+      await Order.findAll(
+        {where: {UserId: req.params.id},
+        include: [{model: Product, through: 'OrderProduct'}]}
+      )
+      .then((orders) => {
+        res.status(200).send({message: 'Pedidos y productos', orders})})
+      .catch((error)=>console.log(error))
+  }
 }
 
 
